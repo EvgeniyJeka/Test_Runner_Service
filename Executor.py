@@ -56,6 +56,7 @@ class TestExecutor(object):
 
                 os.remove("./.report.json")
                 os.chdir(original_workdir)
+
                 return self.compose_testrun_report(plugin.report)
 
     def run_test_folder(self, folder_name):
@@ -80,6 +81,7 @@ class TestExecutor(object):
                 report = self.run_several_files(files)
                 os.remove("./.report.json")
                 os.chdir(original_workdir)
+
                 return report
 
     def run_several_files(self, files_list: list):
@@ -91,7 +93,10 @@ class TestExecutor(object):
         result = {}
         plugin = JSONReport()
 
-        for file in files_list:
+        # Executing only files with '.py' extension
+        python_files_list = [f for f in files_list if len(f.split(".")) > 1 and f.split(".")[1] == 'py']
+
+        for file in python_files_list:
             pytest.main([file], plugins=[plugin])
             result[file] = self.compose_testrun_report(plugin.report)
 
