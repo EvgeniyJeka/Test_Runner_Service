@@ -42,7 +42,6 @@ class TestExecutor(object):
         files_list = self.get_list_of_files(".")
         plugin = JSONReport()
 
-
         for item in files_list:
 
             if file_name in item:
@@ -55,15 +54,14 @@ class TestExecutor(object):
                 os.chdir("/".join(extract_file_path))
                 pytest.main([file_name], plugins=[plugin])
 
+                os.remove("./.report.json")
                 os.chdir(original_workdir)
                 return self.compose_testrun_report(plugin.report)
 
     def run_test_folder(self, folder_name):
 
         # List of all paths of all files and directories
-        files_list = executor.get_list_of_files(".")
-
-
+        files_list = self.get_list_of_files(".")
 
         for item in files_list:
 
@@ -74,11 +72,14 @@ class TestExecutor(object):
                 print("/".join(extract_folder_path))
 
                 # Going to the extracted paths and running the tests
+                original_workdir = os.getcwd()
                 os.chdir("/".join(extract_folder_path))
                 files = [f for f in listdir(".") if os.path.isfile(f)]
 
                 # Running all test files in the requested folder, returning a list of report
                 report = self.run_several_files(files)
+                os.remove("./.report.json")
+                os.chdir(original_workdir)
                 return report
 
     def run_several_files(self, files_list: list):
@@ -87,12 +88,12 @@ class TestExecutor(object):
         :param files_list: list of test file names
         :return:
         """
-        result = []
+        result = {}
         plugin = JSONReport()
 
         for file in files_list:
             pytest.main([file], plugins=[plugin])
-            result.append(self.compose_testrun_report(plugin.report))
+            result[file] = self.compose_testrun_report(plugin.report)
 
         return result
 

@@ -46,10 +46,7 @@ def execute_all_in_folder(folder_name):
     logging.info(f'Gateway: Received a request to run all tests in all files that the folder {folder_name} contains')
 
     # Folder name will be sent to TestExecutor component. Expecting execution report in JSON, that will be returned.
-    response = "executor.RunAllFilesInFolder(folder_name)"
-
-    return {"Success": "executor.RunAllFilesInFolder(folder_name)"}
-
+    return executor.run_test_folder(folder_name)
 
 @app.route("/tests_marked/<test_marker>", methods=['GET'])
 def execute_tests_by_mark(test_marker):
