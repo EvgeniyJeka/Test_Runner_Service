@@ -7,7 +7,7 @@ class PlaceholderMethods(object):
     # Go to https://jsonplaceholder.typicode.com/guide.html
 
     config = configparser.ConfigParser()
-    config.read("../Test_Framework/config.ini")
+    config.read("../../Test_Framework/config.ini")
 
     base_url = config['PLACE_HOLDER']['base_url']
 
