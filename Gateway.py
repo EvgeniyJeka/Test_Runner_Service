@@ -1,13 +1,13 @@
 from flask import Flask
-from flask import request
 import logging
+from Executor import TestExecutor
 
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
 
-##executor = TestExecutor()
+executor = TestExecutor()
 
 
 @app.route("/test_file/<file_name>", methods=['GET'])
@@ -30,11 +30,8 @@ def execute_file(file_name):
 
     logging.info(f'Gateway: Received a request to run all tests in file {file_name}')
 
-    # File name will be sent to TestExecutor component. Expecting execution report in JSON, that will be returned.
-    response = "executor.RunFile(file_name)"
-
-
-    return {"Success" : "executor.RunFile(file_name)" }
+    # File name is sent to TestExecutor component. Expecting execution report in JSON, that will be returned.
+    return executor.run_test_file(file_name)
 
 
 @app.route("/test_folder/<folder_name>", methods=['GET'])
@@ -71,5 +68,4 @@ def execute_tests_by_mark(test_marker):
 
 
 if __name__ == '__main__':
-
     app.run()
