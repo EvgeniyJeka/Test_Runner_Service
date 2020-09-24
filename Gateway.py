@@ -59,9 +59,7 @@ def execute_tests_by_mark(test_marker):
     logging.info(f'Gateway: Received a request to run all tests marked with the following marker -  {test_marker}')
 
     # Required mark will be sent to TestExecutor component. Expecting execution report in JSON, that will be returned.
-    response = "executor.RunAllTestsWithMarker(test_marker)"
-
-    return {"Success": "executor.RunAllTestsWithMarker(test_marker)"}
+    return executor.run_all_with_marker(test_marker)
 
 
 if __name__ == '__main__':

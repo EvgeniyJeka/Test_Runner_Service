@@ -4,6 +4,8 @@ import pytest
 from pytest_jsonreport.plugin import JSONReport
 import logging
 
+TESTS_DIRECTORY = "./Tests"
+
 
 class TestExecutor(object):
 
@@ -52,14 +54,23 @@ class TestExecutor(object):
                 # Going to the extracted paths and running the tests
                 original_workdir = os.getcwd()
                 os.chdir("/".join(extract_file_path))
+                logging.info(f'Executor: Requested file path: {item}')
                 pytest.main([file_name], plugins=[plugin])
 
                 os.remove("./.report.json")
                 os.chdir(original_workdir)
 
+                logging.info(f'Executor: Test execution report: {self.compose_testrun_report(plugin.report)}')
                 return self.compose_testrun_report(plugin.report)
 
     def run_test_folder(self, folder_name):
+        """
+        The method receives a folder name. The folder is expected to contain test files with 'py' extension.
+        Once the folder is found all the test files are executed
+        :param folder_name: String
+        :return: test execution reports, JSON dict of dicts
+        """
+        logging.info(f'Executor: File named {folder_name} was received ')
 
         # List of all paths of all files and directories
         files_list = self.get_list_of_files(".")
@@ -70,11 +81,12 @@ class TestExecutor(object):
                 # Extracting the file path once the file is found
                 extract_folder_path = item.split("\\")
                 extract_folder_path.pop(len(extract_folder_path) - 1)
-                print("/".join(extract_folder_path))
 
                 # Going to the extracted paths and running the tests
                 original_workdir = os.getcwd()
                 os.chdir("/".join(extract_folder_path))
+                logging.info(f'Executor: Requested folder path: {"/".join(extract_folder_path)}')
+
                 files = [f for f in listdir(".") if os.path.isfile(f)]
 
                 # Running all test files in the requested folder, returning a list of report
@@ -82,7 +94,30 @@ class TestExecutor(object):
                 os.remove("./.report.json")
                 os.chdir(original_workdir)
 
+                logging.info(f'Executor: Test execution report: {report}')
                 return report
+
+
+    def run_all_with_marker(self, marker:str):
+        """
+        The method receives a pytest marker and executes all tests that are marked with it
+        :param marker: String
+        :return : JSON report
+        """
+
+        logging.info(f'Received the following test marker: {marker}')
+        plugin = JSONReport()
+
+        #!! move to config
+        os.chdir(TESTS_DIRECTORY)
+
+        to_execute = f"-v -k {marker}"
+        pytest.main(to_execute.split(" "), plugins=[plugin])
+
+        logging.info(f'Executor: Test execution report: {self.compose_testrun_report(plugin.report)}')
+
+        return self.compose_testrun_report(plugin.report)
+
 
     def run_several_files(self, files_list: list):
         """
@@ -130,10 +165,4 @@ if __name__ == '__main__':
 
     executor = TestExecutor()
 
-    raw = executor.run_test_file('test_countries_sanity.py')
 
-    print(raw)
-
-    raw = executor.run_test_file('test_placeholder_sanity.py')
-
-    print(raw)
