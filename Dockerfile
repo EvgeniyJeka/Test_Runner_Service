@@ -6,4 +6,6 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "-m", "pytest", "-v", "test_sanity.py::TestSanity"]
+EXPOSE 5000
+
+CMD ["python", "Gateway.py"]

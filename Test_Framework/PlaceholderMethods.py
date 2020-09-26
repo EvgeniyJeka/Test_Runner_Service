@@ -1,13 +1,14 @@
 from Test_Framework.PlaceholderRequests import *
 import requests
 import configparser
+import os
 
 
 class PlaceholderMethods(object):
     # Go to https://jsonplaceholder.typicode.com/guide.html
 
     config = configparser.ConfigParser()
-    config.read("../../Test_Framework/config.ini")
+    config.read(os.path.join(os.path.dirname(__file__), "config.ini"))
 
     base_url = config['PLACE_HOLDER']['base_url']
 

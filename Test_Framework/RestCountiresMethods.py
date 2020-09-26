@@ -1,6 +1,7 @@
 import requests
 import json
 import configparser
+import os
 
 
 class RestCountriesMethods(object):
@@ -9,7 +10,7 @@ class RestCountriesMethods(object):
 
     # Getting the configuration from config file
     config = configparser.ConfigParser()
-    config.read("../../Test_Framework/config.ini")
+    config.read(os.path.join(os.path.dirname(__file__), "config.ini"))
 
     base_url = (config['REST_COUNTRIES']["base_url"])
     host = (config['REST_COUNTRIES']["host"])

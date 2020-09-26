@@ -2,6 +2,7 @@ import pytest
 from Test_Framework.Center import Centrum
 
 
+
 class TestSanity(object):
 
     postman = Centrum()
