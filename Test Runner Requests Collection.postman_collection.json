@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "6a7203f2-1e58-494d-b919-5886ad3dc445",
+		"name": "Test Runner Requests Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Run Test File",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.0:5000/test_file/test_runner",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "5000",
+					"path": [
+						"test_file",
+						"test_runner"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Run All Files In Folder",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "0.0.0.0:5000/test_folder/PlaceHolderSmoke",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "5000",
+					"path": [
+						"test_folder",
+						"PlaceHolderSmoke"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Run All Tests With Marker",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Run Tes File - var 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "0.0.0.0:5000/test_file/test_countries_sanity.py",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "5000",
+					"path": [
+						"test_file",
+						"test_countries_sanity.py"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

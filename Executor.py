@@ -11,8 +11,6 @@ TESTS_DIRECTORY = os.path.join(repo_dir, "Tests")
 class TestExecutor(object):
     plugin = JSONReport()
 
-
-
     def run_test_file(self, file_name):
         """
         This method receives a filename with py extension.
@@ -35,8 +33,8 @@ class TestExecutor(object):
 
                 pytest.main([to_run], plugins=[self.plugin])
 
-                logging.info(f'Executor: Test execution report: {self.compose_testrun_report(self.plugin.report)}')
-                return self.compose_testrun_report(self.plugin.report)
+                logging.info(f'Executor: Test execution report: {self.compose_test_run_report(self.plugin.report)}')
+                return self.compose_test_run_report(self.plugin.report)
 
     def run_test_folder(self, folder_name):
         """
@@ -73,20 +71,16 @@ class TestExecutor(object):
         :return : JSON report
         """
 
-        logging.info(f'Received the following test marker: {marker}')
-
         curr_dir = os.getcwd()
-
-        # !! move to config
-        os.chdir(".\Tests")
+        logging.info(f'Received the following test marker: {marker}')
+        logging.info(f'Executed from path: {curr_dir}')
 
         to_execute = f"-v -k {marker}"
         pytest.main(to_execute.split(" "), plugins=[self.plugin])
 
-        logging.info(f'Executor: Test execution report: {self.compose_testrun_report(self.plugin.report)}')
+        logging.info(f'Executor: Test execution report: {self.compose_test_run_report(self.plugin.report)}')
 
-        os.chdir(curr_dir)
-        return self.compose_testrun_report(self.plugin.report)
+        return self.compose_test_run_report(self.plugin.report)
 
     def run_several_files(self, files_list: list, base_path):
         """
@@ -104,16 +98,16 @@ class TestExecutor(object):
         for file in python_files_list:
             executed_file_full_path = os.path.join(base_path, file)
             pytest.main([executed_file_full_path], plugins=[self.plugin])
-            result[file] = self.compose_testrun_report(self.plugin.report)
+            result[file] = self.compose_test_run_report(self.plugin.report)
 
         return result
 
     @staticmethod
-    def compose_testrun_report(original_plugin_report):
+    def compose_test_run_report(original_plugin_report):
         """
         The JSONReport plugin generates a report that is quite cumbersome.
         This method is used to extract the required data from the original JSONReport
-        :param raw_data:
+        :param original_plugin_report: The original JSON report produced by JSONReport plugin
         """
 
         if not original_plugin_report['tests']:
@@ -133,8 +127,8 @@ class TestExecutor(object):
 
 
 if __name__ == '__main__':
-
     executer = TestExecutor()
 
     print(TESTS_DIRECTORY)
+    print(os.path.basename(TESTS_DIRECTORY))
     executer.run_all_with_marker("smoke")
