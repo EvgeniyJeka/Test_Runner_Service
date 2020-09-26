@@ -1,11 +1,11 @@
 import os
-from os import listdir
 import pytest
 from pytest_jsonreport.plugin import JSONReport
 import logging
+from setup import Setup
 
 repo_dir = os.path.dirname(__file__)
-TESTS_DIRECTORY = os.path.join(repo_dir, "Tests")
+TESTS_DIRECTORY = os.path.join(repo_dir, Setup.test_folder)
 
 
 class TestExecutor(object):
@@ -34,6 +34,7 @@ class TestExecutor(object):
                 pytest.main([to_run], plugins=[self.plugin])
 
                 logging.info(f'Executor: Test execution report: {self.compose_test_run_report(self.plugin.report)}')
+                self.seek_and_destroy(".report.json")
                 return self.compose_test_run_report(self.plugin.report)
 
     def run_test_folder(self, folder_name):
@@ -56,7 +57,7 @@ class TestExecutor(object):
                 logging.info(f'Executor: Requested folder location {extracted_folder_path}')
 
                 # Gathering all files from the folder
-                files = [f for f in listdir(extracted_folder_path)
+                files = [f for f in os.listdir(extracted_folder_path)
                          if os.path.isfile(os.path.join(extracted_folder_path, f))]
 
                 # Running all test files in the requested folder, returning a list of report
@@ -80,6 +81,8 @@ class TestExecutor(object):
 
         logging.info(f'Executor: Test execution report: {self.compose_test_run_report(self.plugin.report)}')
 
+        self.seek_and_destroy(".report.json")
+
         return self.compose_test_run_report(self.plugin.report)
 
     def run_several_files(self, files_list: list, base_path):
@@ -99,6 +102,8 @@ class TestExecutor(object):
             executed_file_full_path = os.path.join(base_path, file)
             pytest.main([executed_file_full_path], plugins=[self.plugin])
             result[file] = self.compose_test_run_report(self.plugin.report)
+
+        self.seek_and_destroy(".report.json")
 
         return result
 
@@ -125,10 +130,22 @@ class TestExecutor(object):
 
         return result
 
+    @staticmethod
+    def seek_and_destroy(file_name:str):
+        all_paths = os.walk(os.getcwd())
+
+        for path in all_paths:
+
+            if file_name in path[2]:
+                to_delete = os.path.join(path[0], file_name)
+                logging.info(f'Executor: Deleting file: {to_delete}')
+                os.remove(to_delete)
+                break
+
+
 
 if __name__ == '__main__':
-    executer = TestExecutor()
 
-    print(TESTS_DIRECTORY)
-    print(os.path.basename(TESTS_DIRECTORY))
-    executer.run_all_with_marker("smoke")
+   executor = TestExecutor()
+
+   executor.seek_and_destroy(".report.json")

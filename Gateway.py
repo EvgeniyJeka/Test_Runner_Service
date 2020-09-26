@@ -1,6 +1,7 @@
 from flask import Flask
 import logging
 from Executor import TestExecutor
+from setup import Setup
 
 logging.basicConfig(level=logging.INFO)
 
@@ -63,4 +64,4 @@ def execute_tests_by_mark(test_marker):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host=Setup.run_on_host)
