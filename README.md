@@ -13,3 +13,8 @@ a report with executed tests results is sent in response as JSON.
 The Test Runner Service can be placed together with the tests in 
 Docker container (see requirements list) - while the container is
 running each test can be executed on client's request. 
+
+Build image "test_runner"
+
+Run with:
+**docker run -it -p 5000:5000 test_runner**
